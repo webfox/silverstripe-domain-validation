@@ -66,7 +66,7 @@ class EditableSelectableLookupField extends \EditableFormField {
 	{
 		$checks = $this->getDnsConfiguredChecks();
 		$field = SelectableLookupField::create(null)
-					->setFields($this->Name, $checks, (bool)$this->StrictCheck)
+					->setFields($this->Name, $this->Value, $checks, (bool)$this->StrictCheck)
 					->setFieldHolderTemplate('UserFormsGroupField_holder')
 					->setTemplate('UserFormsField');
 		$field->setName($this->Name);

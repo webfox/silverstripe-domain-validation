@@ -6,10 +6,10 @@ namespace Codem\DomainValidation;
  */
 class SelectableLookupField extends \CompositeField implements FieldInterface {
 	
-	public function setFields($name, $dns_checks, $strict_checking = false) {
+	public function setFields($name, $value, $dns_checks, $strict_checking = false) {
 		$this->setName($name);
 		$domain_field_title = _t("DomainValidation.DOMAIN", "Domain");
-		$domain_field = ValidatedDomainField::create($this->name . "[domain]", $domain_field_title);
+		$domain_field = ValidatedDomainField::create($this->name . "[domain]", $domain_field_title, $value);
 		$domain_field->beStrict($strict_checking);
 		$lookup_field_title = _t("DomainValidation.CHECKS_TO_PERFORM", "Check");
 		$lookup_field = \ListboxField::create($this->name . "[lookup]", $lookup_field_title, $dns_checks)->setMultiple(true);
@@ -61,9 +61,19 @@ class SelectableLookupField extends \CompositeField implements FieldInterface {
 			return false;
 		}
 		
+		$domain_field_value = $domain_field->Value();
+		if($domain_field_value == "") {
+			$validator->validationError(
+				$name . "[domain]",
+				sprintf(_t('DomainValidation.NO_DOMAIN_VALUE', "Please provide a %s"),  _t('DomainValidation.DOMAIN', 'domain')),
+				'validation'
+			);
+			return false;	
+		}
+		
 		$dns_checks_requested = $lookup_field->Value();
 		$lookup_field_title = $lookup_field->Title();
-		if(!is_array($dns_checks_requested) || empty($dns_checks_requested)) {
+		if(!is_array($dns_checks_requested) || empty($dns_checks_requested) || !$dns_checks_requested) {
 			$validator->validationError(
 				$name . "[lookup]",
 				sprintf(_t('DomainValidation.MISSING_CHECKS', "Please select at least one value from the '%' field."), $lookup_field_title),
