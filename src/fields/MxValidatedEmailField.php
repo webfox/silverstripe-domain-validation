@@ -20,10 +20,6 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 		'Codem\DomainValidation\CloudflareDnsOverHttps',
 	];
 	
-	private static $dns_checks = [
-		'MX',
-	];
-	
 	/**
 	 * Custom validators for custom validation
 	 * @var array
@@ -61,7 +57,7 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 		// assume that it's not valid
 		$validated = false;
 		try {
-			$result = $this->performDnsChecks( $this->getDomainByEmailAddress($this->value), $validator, $lang_type);
+			$result = $this->performMxRecordCheck( $this->getDomainByEmailAddress($this->value), $validator, $lang_type);
 			if(!$result) {
 				throw new \Exception("Domain validation lookup did not return answers for all request checks");
 			}
@@ -70,7 +66,7 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 		} catch (\Exception $e) {
 			\SS_Log::log("ERROR: " . $e->getMessage(), \SS_Log::INFO);
 			$message = sprintf(
-							_t('DomainValidation.NO_MX_RECORD', "The e-mail address '%s' could not be validated"),
+							_t('DomainValidation.NO_MX_RECORD', "The e-mail address '%s' does not appear to be valid"),
 							$this->value
 			);
 		}

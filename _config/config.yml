@@ -4,8 +4,6 @@ Name: codem-domain-validation
 Codem\DomainValidation\MxValidatedEmailField:
     extensions:
         - 'Codem\DomainValidation\FieldExtension'
-    dns_checks:
-        - MX
     domain_validators:
         - 'Codem\DomainValidation\CloudflareDnsOverHttps'
 Codem\DomainValidation\ValidatedDomainField:
