@@ -23,10 +23,12 @@ class FieldExtension extends \Extension {
 	
 	public function addDomainValidator(AbstractDomainValidator $validator) {
 		$this->owner->custom_validators[ get_class($validator) ] = $validator;
+		return $this->owner;
 	}
 	
 	public function clearCustomValidators() {
 		$this->owner->custom_validators = [];
+		return $this->owner;
 	}
 	
 	/**
@@ -67,17 +69,19 @@ class FieldExtension extends \Extension {
 	
 	public function addCustomDnsCheck($dns_check) {
 		$this->owner->custom_dns_checks[ $dns_check ] = $dns_check;
+		return $this->owner;
 	}
 	
 	public function clearCustomDnsChecks() {
 		$this->owner->custom_dns_checks = [];
+		return $this->owner;
 	}
 	
 	/**
 	 * Returns the DNS checks to perform
 	 * @returns mixed
 	 */
-	public function getDnsChecks() {
+	public function getDnsChecks(\Validator $validator, $lang_type) {
 		if(!empty($this->owner->custom_dns_checks)) {
 			// any custom DNS checks set override dns_checks in config
 			$dns_checks = $this->owner->custom_dns_checks;
@@ -86,7 +90,8 @@ class FieldExtension extends \Extension {
 		}
 		if(!is_array($dns_checks) || empty($dns_checks)) {
 			$message = sprintf(
-				_t('DomainValidation.NO_CHECKS', "Sorry, we could not validate the '%s' at this time"),
+				_t('DomainValidation.NO_CHECKS', "Sorry, we could not validate the %s '%s' at this time"),
+				$lang_type,
 				$this->owner->value
 			);
 			$validator->validationError(
@@ -105,12 +110,12 @@ class FieldExtension extends \Extension {
 	 * Perform all DNS checks on the field value using all Domain Validators
 	 * @param string $domain  the domain to check
 	 * @param \Validator $validator
-	 * @param string $type language string for validation
+	 * @param string $lang_type language string for validation
 	 */
-	public function performDnsChecks($domain, \Validator $validator, $type) {
+	public function performDnsChecks($domain, \Validator $validator, $lang_type) {
 		
-		$dns_checks = $this->owner->getDnsChecks();
-		$domain_validators = $this->owner->getDomainValidators($validator, $type);
+		$dns_checks = $this->owner->getDnsChecks($validator, $lang_type);
+		$domain_validators = $this->owner->getDomainValidators($validator, $lang_type);
 		$answers = [];
 		
 		foreach($domain_validators as $domain_validator) {
@@ -122,6 +127,28 @@ class FieldExtension extends \Extension {
 					$answers[ $dns_check ] = $answer;
 					\SS_Log::log("GOT '{$dns_check}' answer " . json_encode($answer), \SS_Log::INFO);
 				}
+			}
+		}
+		
+		return $answers;
+	}
+	
+	/**
+	 * Perform MX checks on the field value using all Domain Validators
+	 * @param string $domain  the domain to check
+	 * @param \Validator $validator
+	 * @param string $lang_type language string for validation
+	 */
+	public function performMxRecordCheck($domain, \Validator $validator, $lang_type) {
+		
+		$domain_validators = $this->owner->getDomainValidators($validator, $lang_type);
+		$answers = [];
+		foreach($domain_validators as $domain_validator) {
+			$domain_validator->setDomain($domain);// set a domain by email address
+			$answer = $domain_validator->performLookup('MX');
+			if($answer && !empty($answer)) {
+				$answers[ 'MX' ] = $answer;
+				\SS_Log::log("GOT 'MX' answer " . json_encode($answer), \SS_Log::INFO);
 			}
 		}
 		

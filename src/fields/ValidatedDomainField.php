@@ -59,7 +59,7 @@ class ValidatedDomainField extends \TextField implements FieldInterface {
 		if($this->value == "") {
 			$validator->validationError(
 				$this->name,
-				sprintf(_t('DomainValidation.NO_VALUE', "Please provide a %s"), $lang_type),
+				sprintf(_t('DomainValidation.NO_DOMAIN_VALUE', "Please provide a %s"), $lang_type),
 				'validation'
 			);
 			return false;
