@@ -7,6 +7,9 @@
 		"domain",
 		"validation"
 	],
+	"extra": {
+		"installer-name": "domainvalidation"
+	},
 	"license": "MIT",
 	"authors": [{
 		"name": "James",
