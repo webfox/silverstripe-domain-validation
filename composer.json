@@ -1,6 +1,7 @@
 {
 	"description": "Domain Validation module for Silverstripe",
 	"name": "codem/silverstripe-domain-validation",
+	"type": "silverstripe-module",
 	"keywords": [
 		"silverstripe",
 		"dns",
