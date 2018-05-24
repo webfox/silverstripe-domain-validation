@@ -5,7 +5,7 @@ Minimise the hassle of domain and email address typos using this module!
 Some APIs reject requests if the domain is invalid e.g user@examplecom, with this module you can check for existing DNS records to minimise these issues.
 
 ## Requirements
-Silverstripe 3, currently. SS4 upgrade PRs welcome :)
+Silverstripe 3, currently. SS4 upgrade -> PRs welcome :)
 
 ## Features
 + Plugs into Cloudflare DNS over HTTPS
@@ -60,4 +60,4 @@ The ```ValidatedDomainField``` allows for strict and non-strict checking (defaul
 Codem
 
 ## License
-MIT
+See LICENCE
