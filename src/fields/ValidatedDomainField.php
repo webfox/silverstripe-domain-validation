@@ -7,6 +7,9 @@ namespace Codem\DomainValidation;
  */
 class ValidatedDomainField extends \TextField implements FieldInterface {
 
+	public $custom_dns_checks = [];
+	public $custom_clients = [];
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -18,26 +21,17 @@ class ValidatedDomainField extends \TextField implements FieldInterface {
 	 * @var array
 	 * @note one or more checks to perform. Can be A, AAAA, CNAME or anything else really
 	 */
-	private static $dns_check = [
+	private static $checks = [
 		'A', // by default only do an A record check
 	];
-
-	public $custom_dns_checks = [];
 
 	/**
 	 * @var array
 	 * @note one or more domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
 	 */
-	private static $dns_validators = [
+	private static $dns_clients = [
 		'Codem\DomainValidation\CloudflareDnsOverHttps',
 	];
-
-	/**
-	 * Custom validators for custom validation
-	 * @var array
-	 * @param Codem\DomainValidation\AbstractDomainValidator $validator a domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
-	 */
-	public $custom_validators = [];
 
 	private $answers = [];
 	private $be_strict = false;
@@ -78,7 +72,7 @@ class ValidatedDomainField extends \TextField implements FieldInterface {
 				var_dump($result);
 			}
 			if($this->be_strict) {
-				$dns_checks = $this->getDnsChecks();
+				$dns_checks = $this->getDnsChecks($validator, $lang_type);
 				if(count($dns_checks) != count($this->answers)) {
 					throw new \Exception("Domain validation lookup did not return answers for all request checks");
 				} else {

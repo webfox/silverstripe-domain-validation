@@ -7,14 +7,13 @@ namespace Codem\DomainValidation;
  */
 
 class EditableMxValidatedEmailField extends \EditableEmailField {
-	private static $singular_name = 'Email Field with MX validation';
+    private static $singular_name = 'Email Field with MX validation';
 
     private static $plural_name = 'Email Fields with MX validation';
 
     private static $has_placeholder = true;
 
-    public function getFormField()
-    {
+    public function getFormField() {
         $field = MxValidatedEmailField::create($this->Name, $this->EscapedTitle, $this->Default)
             ->setFieldHolderTemplate('UserFormsField_holder')
             ->setTemplate('UserFormsField');

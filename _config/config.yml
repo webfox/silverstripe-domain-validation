@@ -4,13 +4,16 @@ Name: codem-domain-validation
 Codem\DomainValidation\MxValidatedEmailField:
     extensions:
         - 'Codem\DomainValidation\FieldExtension'
-    domain_validators:
+    dns_clients:
         - 'Codem\DomainValidation\CloudflareDnsOverHttps'
 Codem\DomainValidation\ValidatedDomainField:
     extensions:
         - 'Codem\DomainValidation\FieldExtension'
-    dns_checks:
+    checks:
         - A
-        - AAAA
-    domain_validators:
+    dns_clients:
         - 'Codem\DomainValidation\CloudflareDnsOverHttps'
+Codem\DomainValidation\DomainLookupForm:
+    checks:
+        - A
+    dns_client: 'Codem\DomainValidation\CloudflareDnsOverHttps'

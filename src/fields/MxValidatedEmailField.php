@@ -4,29 +4,25 @@ namespace Codem\DomainValidation;
  * An Email field that does MX record validation, after the standard Email validation
  */
 class MxValidatedEmailField extends \EmailField implements FieldInterface {
-	
+
+	public $custom_dns_checks = [];
+	public $custom_clients = [];
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function Type() {
 		return 'email text';
 	}
-	
+
 	/**
 	 * @var array
 	 * @note one or more domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
 	 */
-	private static $domain_validators = [
+	private static $dns_clients = [
 		'Codem\DomainValidation\CloudflareDnsOverHttps',
 	];
-	
-	/**
-	 * Custom validators for custom validation
-	 * @var array
-	 * @param Codem\DomainValidation\AbstractDomainValidator $validator a domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
-	 */
-	public $custom_validators = [];
-	
+
 	private $answers = [];
 	/**
 	 * Returns answers, if any, of a domain validation check
@@ -34,7 +30,7 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 	public function getAnswers() {
 		return $this->answers;
 	}
-	
+
 	/**
 	 * Validate the email address value
 	 */
@@ -53,7 +49,7 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 		if(!$result) {
 			return false;
 		}
-		
+
 		// assume that it's not valid
 		$validated = false;
 		try {
@@ -70,7 +66,7 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 							$this->value
 			);
 		}
-		
+
 		if(!$validated) {
 			$validator->validationError(
 				$this->name,
@@ -79,6 +75,6 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 			);
 		}
 		return $validated;
-		
+
 	}
 }
