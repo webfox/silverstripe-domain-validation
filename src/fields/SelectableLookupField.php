@@ -10,7 +10,6 @@ use SilverStripe\Forms\FieldList;
 class SelectableLookupField extends CompositeField implements FieldInterface {
 
 	public function setFields($name, $value, $dns_checks, $strict_checking = false) {
-		var_dump($name);
 		$this->setName($name);
 		$domain_field_title = _t("DomainValidation.DOMAIN", "Domain");
 		$domain_field = ValidatedDomainField::create($this->name . "[domain]", $domain_field_title, $value);
