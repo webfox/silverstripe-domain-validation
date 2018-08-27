@@ -68,9 +68,6 @@ class ValidatedDomainField extends \TextField implements FieldInterface {
 		try {
 			$result = $this->performDnsChecks($this->value, $validator, $lang_type);
 			$this->answers = $result;
-			if($this->value == "example") {
-				var_dump($result);
-			}
 			if($this->be_strict) {
 				$dns_checks = $this->getDnsChecks($validator, $lang_type);
 				if(count($dns_checks) != count($this->answers)) {
