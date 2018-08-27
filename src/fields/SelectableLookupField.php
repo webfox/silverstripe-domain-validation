@@ -80,7 +80,7 @@ class SelectableLookupField extends CompositeField implements FieldInterface {
 		if(!is_array($dns_checks_requested) || empty($dns_checks_requested) || !$dns_checks_requested) {
 			$validator->validationError(
 				$name . "[lookup]",
-				sprintf(_t('DomainValidation.MISSING_CHECKS', "Please select at least one value from the '%' field."), $lookup_field_title),
+				sprintf(_t('DomainValidation.MISSING_CHECKS', "Please select at least one value from the '%s' field."), $lookup_field_title),
 				'validation'
 			);
 			return false;
