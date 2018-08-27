@@ -1,8 +1,7 @@
 <?php
 namespace Codem\DomainValidation;
-use Extension;
-use Validator;
-use SS_Log;
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\Validator;
 
 /**
  * Provides common methods for domain validation fields
@@ -78,7 +77,7 @@ class FieldExtension extends Extension {
 			return $this->owner->noValidators($validator, $type);
 		}
 
-		SS_Log::log("GOT " . count($domain_validators) , " validators", SS_Log::INFO);
+		Log::log("GOT " . count($domain_validators) , " validators", 'INFO');
 
 		return $domain_validators;
 	}

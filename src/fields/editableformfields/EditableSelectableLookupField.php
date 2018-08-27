@@ -1,7 +1,8 @@
 <?php
 namespace Codem\DomainValidation;
-use TextField;
-use CheckboxField;
+use SilverStripe\UserForms\Model\EditableFormField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\CheckboxField;
 
 /**
  * EditableSelectableLookupField
@@ -9,7 +10,7 @@ use CheckboxField;
  * Allow users to define a validating editable domain validator field with applicable DNS checks
  */
 
-class EditableSelectableLookupField extends \EditableFormField {
+class EditableSelectableLookupField extends EditableFormField {
 	private static $singular_name = 'Text Field with custom DNS validation';
 
     private static $plural_name = 'Text Fields with custom DNS validation';

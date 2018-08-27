@@ -1,7 +1,6 @@
 <?php
 namespace Codem\DomainValidation;
 use Exception;
-use SS_Log;
 
 /**
  * The Google DNS over HTTPS (DOH) validator can perform various DNS looksup on domains and domain parts of email addresses
@@ -54,7 +53,7 @@ class GoogleDnsOverHttps extends AbstractDomainValidator {
 
 		} catch (Exception $e) {
 			$error = "GoogleDnsOverHttps lookup failed with error: {$e->getMessage()}. Exception=" . get_class($e);
-			SS_Log::log($error, SS_Log::INFO);
+			Log::log($error, 'INFO');
 		}
 
 		return false;

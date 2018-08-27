@@ -1,8 +1,7 @@
 <?php
 namespace Codem\DomainValidation;
-use EmailField;
+use SilverStripe\Forms\EmailField;
 use Exception;
-use SS_Log;
 
 
 /**
@@ -65,7 +64,7 @@ class MxValidatedEmailField extends EmailField implements FieldInterface {
 			$this->answers = $result;
 			$validated = true;
 		} catch (Exception $e) {
-			SS_Log::log("ERROR: " . $e->getMessage(), SS_Log::INFO);
+			Log::log("ERROR: " . $e->getMessage(), 'INFO');
 			$message = sprintf(
 							_t('DomainValidation.NO_MX_RECORD', "The e-mail address '%s' does not appear to be valid"),
 							$this->value

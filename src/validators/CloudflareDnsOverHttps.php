@@ -1,7 +1,6 @@
 <?php
 namespace Codem\DomainValidation;
 use Exception;
-use SS_Log;
 
 /**
  * The Cloudflare DNS over HTTPS (DOH) validator can perform various DNS looksup on domains and domain parts of email addresses
@@ -56,7 +55,7 @@ class CloudflareDnsOverHttps extends AbstractDomainValidator {
 
 		} catch (Exception $e) {
 			$error = "CloudflareDnsOverHttps lookup failed with error: {$e->getMessage()} for {$this->domain}/{$type}. Exception=" . get_class($e);
-			SS_Log::log($error, SS_Log::INFO);
+			Log::log($error, 'INFO');
 		}
 
 		return false;

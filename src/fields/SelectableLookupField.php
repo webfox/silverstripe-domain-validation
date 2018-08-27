@@ -1,8 +1,8 @@
 <?php
 namespace Codem\DomainValidation;
-use CompositeField;
-use ListboxField;
-use FieldList;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\FieldList;
 
 /**
  * Provides a field containing a text field that will hold a domain and a selector for one or more DNS checks

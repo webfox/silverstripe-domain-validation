@@ -6,7 +6,7 @@ use Kevinrob\GuzzleCache\Storage\FlysystemStorage;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\HandlerStack;
-use Object;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  * Provides common methods for performing lookups and defining method
@@ -15,7 +15,9 @@ use Object;
  * @package validatable-emailfield
  * @subpackage validators
  */
-abstract class AbstractDomainValidator extends Object {
+abstract class AbstractDomainValidator {
+
+	use Configurable;
 
 	protected $domain;
 	protected $protocol = "https";

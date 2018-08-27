@@ -1,8 +1,7 @@
 <?php
 namespace Codem\DomainValidation;
-use TextField;
+use SilverStripe\Forms\TextField;
 use Exception;
-use SS_Log;
 
 /**
  * A field that checks a value (a purported domain) against various DNS records
@@ -86,7 +85,7 @@ class ValidatedDomainField extends TextField implements FieldInterface {
 				$validated = true;
 			}
 		} catch (Exception $e) {
-			SS_Log::log("ERROR: " . $e->getMessage(), SS_Log::INFO);
+			Log::log("ERROR: " . $e->getMessage(), 'INFO');
 			$message = sprintf(
 						_t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
 						$this->value

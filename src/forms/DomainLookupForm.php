@@ -1,11 +1,11 @@
 <?php
 namespace Codem\DomainValidation;
-use Form;
-use FieldList;
-use FormAction;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
 use Exception;
-use ValidationException;
-use Session;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\Control\Session;
 
 /*
  * DomainLookupForm performs multiple DNS checks of one domain value using one DNS client,
