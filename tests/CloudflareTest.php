@@ -1,10 +1,11 @@
 <?php
 namespace Codem\DomainValidation;
+use SapphireTest;
 
 /**
  * Tests for CloudflareDnsOverHttps
  */
-class CloudflareTest extends \SapphireTest {
+class CloudflareTest extends SapphireTest {
 
 	private static $mx_domain = "codem.com.au";
 	private static $a_answer = "codem.com.au.";

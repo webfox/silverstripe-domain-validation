@@ -1,10 +1,11 @@
 <?php
 namespace Codem\DomainValidation;
+use SapphireTest;
 
 /**
  * Tests for GoogleDnsOverHttps
  */
-class GoogleTest extends \SapphireTest {
+class GoogleTest extends SapphireTest {
 
 	private static $mx_domain = "codem.com.au";
 	private static $a_answer = "codem.com.au.";

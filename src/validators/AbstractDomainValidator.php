@@ -6,6 +6,7 @@ use Kevinrob\GuzzleCache\Storage\FlysystemStorage;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\HandlerStack;
+use Object;
 
 /**
  * Provides common methods for performing lookups and defining method
@@ -14,21 +15,21 @@ use GuzzleHttp\HandlerStack;
  * @package validatable-emailfield
  * @subpackage validators
  */
-abstract class AbstractDomainValidator extends \Object {
-	
+abstract class AbstractDomainValidator extends Object {
+
 	protected $domain;
 	protected $protocol = "https";
 	protected $host = "";
 	protected $path = "";
 	protected $timeout = 5;
 	abstract public function performLookup($type);
-	
-	
+
+
 	protected function getCacheDir() {
 		$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'domainvalidation';
 		return $cachedir;
 	}
-	
+
 	/**
 	 * Refer: http://guzzle3.readthedocs.io/plugins/cache-plugin.html
 	 */
@@ -41,17 +42,17 @@ abstract class AbstractDomainValidator extends \Object {
 						new FlysystemAdapterLocal( $this->getCacheDir() )
 						)
 					)
-				), 
+				),
 				'cache'
 		);
 		// Add this middleware to the top with `push`
 		$stack->push(new CacheMiddleware(), 'cache');
 		return $stack;
 	}
-	
+
 	/**
 	 * Do a GET request
-	 * @returns 
+	 * @returns
 	 */
 	protected function doGet(array $args) {
 		$query = http_build_query($args);
@@ -64,11 +65,11 @@ abstract class AbstractDomainValidator extends \Object {
 		// allow calling method to handle responses
 		return $response;
 	}
-		
+
 	public function setDomain($domain) {
 		$this->domain = $domain;
 	}
-	
+
 	/**
 	 * @returns boolean
 	 * @param string $compare e.g "1 aspmx.l.google.com." optional
@@ -86,7 +87,7 @@ abstract class AbstractDomainValidator extends \Object {
 			}
 			foreach($answers as $answer) {
 				if(isset($answer->data) && $answer->data == $compare) {
-					return $compare;	
+					return $compare;
 				}
 			}
 		}

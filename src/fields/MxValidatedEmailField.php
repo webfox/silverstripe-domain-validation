@@ -1,9 +1,14 @@
 <?php
 namespace Codem\DomainValidation;
+use EmailField;
+use Exception;
+use SS_Log;
+
+
 /**
  * An Email field that does MX record validation, after the standard Email validation
  */
-class MxValidatedEmailField extends \EmailField implements FieldInterface {
+class MxValidatedEmailField extends EmailField implements FieldInterface {
 
 	public $custom_dns_checks = [];
 	public $custom_clients = [];
@@ -55,12 +60,12 @@ class MxValidatedEmailField extends \EmailField implements FieldInterface {
 		try {
 			$result = $this->performMxRecordCheck( $this->getDomainByEmailAddress($this->value), $validator, $lang_type);
 			if(!$result) {
-				throw new \Exception("Domain validation lookup did not return answers for all request checks");
+				throw new Exception("Domain validation lookup did not return answers for all request checks");
 			}
 			$this->answers = $result;
 			$validated = true;
-		} catch (\Exception $e) {
-			\SS_Log::log("ERROR: " . $e->getMessage(), \SS_Log::INFO);
+		} catch (Exception $e) {
+			SS_Log::log("ERROR: " . $e->getMessage(), SS_Log::INFO);
 			$message = sprintf(
 							_t('DomainValidation.NO_MX_RECORD', "The e-mail address '%s' does not appear to be valid"),
 							$this->value

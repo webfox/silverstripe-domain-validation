@@ -1,10 +1,14 @@
 <?php
 namespace Codem\DomainValidation;
+use FunctionalTest;
+use PHPUnit_Framework_AssertionFailedError;
+use Exception;
+use Validator;
 
 /**
  * Test validation of various addresses within {@link MxValidatedEmailField}
  */
-class EmailFieldTest extends \FunctionalTest {
+class EmailFieldTest extends FunctionalTest {
 
 	protected $valid_email_address= "devnull+gmailthing@codem.com.au";// valid domain has MX
 	protected $invalid_mx_address = "test@example.com";// valid domain that has no MX
@@ -41,11 +45,11 @@ class EmailFieldTest extends \FunctionalTest {
 				}
 				// assert that what we expect
 				$this->assertTrue($result == $expected_result, trim($error_string));
-			} catch (\PHPUnit_Framework_AssertionFailedError $e) {
+			} catch (PHPUnit_Framework_AssertionFailedError $e) {
 				// catch assertTrue exception above
 				throw $e;
-			} catch (\Exception $e) {
-				// success should not throw an \Exception
+			} catch (Exception $e) {
+				// success should not throw an Exception
 				if($expected_result) {
 					$this->assertTrue(false, "Email {$email} was expected to pass but failed and validation threw an exception: {$e->getMessage()}");
 				}
@@ -80,11 +84,11 @@ class EmailFieldTest extends \FunctionalTest {
 				}
 				// assert that what we expect
 				$this->assertTrue($result == $expected_result, trim($error_string));
-			} catch (\PHPUnit_Framework_AssertionFailedError $e) {
+			} catch (PHPUnit_Framework_AssertionFailedError $e) {
 				// catch assertTrue exception above
 				throw $e;
-			} catch (\Exception $e) {
-				// success should not throw an \Exception
+			} catch (Exception $e) {
+				// success should not throw an Exception
 				if($expected_result) {
 					$this->assertTrue(false, "Domain {$domain} was expected to pass but failed and validation threw an exception: {$e->getMessage()}");
 				}
@@ -98,7 +102,7 @@ class EmailFieldTest extends \FunctionalTest {
 /**
  * Validator for test
  */
-class DomainValidation_Validator extends \Validator {
+class DomainValidation_Validator extends Validator {
 
 	public function javascript() {
 	}

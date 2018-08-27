@@ -1,9 +1,13 @@
 <?php
 namespace Codem\DomainValidation;
+use Extension;
+use Validator;
+use SS_Log;
+
 /**
  * Provides common methods for domain validation fields
  */
-class FieldExtension extends \Extension {
+class FieldExtension extends Extension {
 
 
 	public function addCustomDnsCheck($dns_check) {
@@ -30,7 +34,7 @@ class FieldExtension extends \Extension {
 	/**
 	 * Add a validation error when no Domain Validators can be found
 	 */
-	public function noValidators(\Validator $validator, $type = 'value') {
+	public function noValidators(Validator $validator, $type = 'value') {
 		$message = sprintf(
 					_t('DomainValidation.CANNOT_DOMAIN_VALIDATE', "Sorry, we could not validate the %s '%s'"),
 					$type,
@@ -48,7 +52,7 @@ class FieldExtension extends \Extension {
 	 * Returns {@link Codem\DomainValidation\AbstractDomainValidator} instances to use for validation
 	 * @returns mixed
 	 */
-	public function getDnsClients(\Validator $validator, $type) {
+	public function getDnsClients(Validator $validator, $type) {
 		if(!empty($this->owner->custom_clients)) {
 			// any custom validators set override domain_validators in config
 			$validators = $this->owner->custom_clients;
@@ -74,7 +78,7 @@ class FieldExtension extends \Extension {
 			return $this->owner->noValidators($validator, $type);
 		}
 
-		\SS_Log::log("GOT " . count($domain_validators) , " validators", \SS_Log::INFO);
+		SS_Log::log("GOT " . count($domain_validators) , " validators", SS_Log::INFO);
 
 		return $domain_validators;
 	}
@@ -83,7 +87,7 @@ class FieldExtension extends \Extension {
 	 * Returns the DNS checks to perform
 	 * @returns mixed
 	 */
-	public function getDnsChecks(\Validator $validator, $lang_type) {
+	public function getDnsChecks(Validator $validator, $lang_type) {
 		if(!empty($this->owner->custom_dns_checks)) {
 			// any custom DNS checks set will override dns_checks in config
 			$dns_checks = $this->owner->custom_dns_checks;
@@ -115,7 +119,7 @@ class FieldExtension extends \Extension {
 	 * @param \Validator $validator
 	 * @param string $lang_type language string for validation
 	 */
-	public function performDnsChecks($domain, \Validator $validator, $lang_type) {
+	public function performDnsChecks($domain, Validator $validator, $lang_type) {
 
 		$dns_checks = $this->owner->getDnsChecks($validator, $lang_type);
 		$domain_validators = $this->owner->getDnsClients($validator, $lang_type);
@@ -141,7 +145,7 @@ class FieldExtension extends \Extension {
 	 * @param \Validator $validator
 	 * @param string $lang_type language string for validation
 	 */
-	public function performMxRecordCheck($domain, \Validator $validator, $lang_type) {
+	public function performMxRecordCheck($domain, Validator $validator, $lang_type) {
 
 		$domain_validators = $this->owner->getDnsClients($validator, $lang_type);
 		$answers = [];

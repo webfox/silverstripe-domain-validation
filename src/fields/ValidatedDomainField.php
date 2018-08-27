@@ -1,11 +1,14 @@
 <?php
 namespace Codem\DomainValidation;
+use TextField;
+use Exception;
+use SS_Log;
 
 /**
  * A field that checks a value (a purported domain) against various DNS records
  * This field does not check the existence of a domain name, as domain names can exist without any DNS records e.g an intranet not in DNS
  */
-class ValidatedDomainField extends \TextField implements FieldInterface {
+class ValidatedDomainField extends TextField implements FieldInterface {
 
 	public $custom_dns_checks = [];
 	public $custom_clients = [];
@@ -71,19 +74,19 @@ class ValidatedDomainField extends \TextField implements FieldInterface {
 			if($this->be_strict) {
 				$dns_checks = $this->getDnsChecks($validator, $lang_type);
 				if(count($dns_checks) != count($this->answers)) {
-					throw new \Exception("Domain validation lookup did not return answers for all request checks");
+					throw new Exception("Domain validation lookup did not return answers for all request checks");
 				} else {
 					$validated = true;
 				}
 			} else if(empty($this->answers)) {
 				// no results returned at all :(
-				throw new \Exception("No answers for requested DNS checks");
+				throw new Exception("No answers for requested DNS checks");
 			} else {
 				// not strict OR string AND all results returned
 				$validated = true;
 			}
-		} catch (\Exception $e) {
-			\SS_Log::log("ERROR: " . $e->getMessage(), \SS_Log::INFO);
+		} catch (Exception $e) {
+			SS_Log::log("ERROR: " . $e->getMessage(), SS_Log::INFO);
 			$message = sprintf(
 						_t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
 						$this->value

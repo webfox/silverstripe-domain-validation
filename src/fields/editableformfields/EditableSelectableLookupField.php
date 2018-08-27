@@ -1,5 +1,8 @@
 <?php
 namespace Codem\DomainValidation;
+use TextField;
+use CheckboxField;
+
 /**
  * EditableSelectableLookupField
  *
@@ -41,11 +44,11 @@ class EditableSelectableLookupField extends \EditableFormField {
 		$title = _t('DomainValidation.CHECK_INSTRUCTIONS', 'Perform these DNS checks. Separate each value by a comma.');
 		$description = _t('DomainValidation.CHECK_EXAMPLE', "Example: A,AAAA,MX");
 
-		$fields->addFieldToTab( "Root.Main", \TextField::create('DnsChecks', $title)->setDescription($description) );
+		$fields->addFieldToTab( "Root.Main", TextField::create('DnsChecks', $title)->setDescription($description) );
 
 		$title = _t('DomainValidation.STRICT_CHECK_INSTRUCTIONS', 'Perform a strict check.');
 		$description = _t('DomainValidation.STRICT_CHECK_EXAMPLE', "When checked, all DNS checks must return a valid, non-empty response for the field to validate.");
-		$fields->addFieldToTab( "Root.Main", \CheckboxField::create('StrictCheck', $title)->setDescription($description) );
+		$fields->addFieldToTab( "Root.Main", CheckboxField::create('StrictCheck', $title)->setDescription($description) );
 
 		return $fields;
 	}
