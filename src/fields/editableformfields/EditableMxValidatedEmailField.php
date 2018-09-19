@@ -15,6 +15,8 @@ class EditableMxValidatedEmailField extends EditableEmailField {
 
     private static $has_placeholder = true;
 
+    private static $table_name = 'EditableMxValidatedEmailField';
+
     public function getFormField() {
         $field = MxValidatedEmailField::create($this->Name, $this->EscapedTitle, $this->Default)
             ->setFieldHolderTemplate('UserFormsField_holder')

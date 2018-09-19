@@ -17,6 +17,12 @@ class EditableSelectableLookupField extends EditableFormField {
 
     private static $has_placeholder = true;
 
+		/**
+		 * Defines the database table name
+		 * @var string
+		 */
+		private static $table_name = 'EditableSelectableLookupField';
+
 	/**
 	 * Database fields
 	 * @var array

@@ -15,6 +15,12 @@ class EditableValidatedDomainField extends EditableFormField {
 
     private static $has_placeholder = true;
 
+		/**
+		 * Defines the database table name
+		 * @var string
+		 */
+		private static $table_name = 'EditableValidatedDomainField';
+
     public function getFormField()
     {
         $field = ValidatedDomainField::create($this->Name, $this->EscapedTitle, $this->Default)
