@@ -48,7 +48,7 @@ class EditableSelectableLookupField extends EditableFormField {
 	{
 		$fields = parent::getCMSFields();
 
-		$title = _t('DomainValidation.CHECK_INSTRUCTIONS', 'Perform these DNS checks. Separate each value by a comma.');
+		$title = _t('DomainValidation.CHECK_INSTRUCTIONS', 'Selectable DNS checks. Separate each value by a comma.');
 		$description = _t('DomainValidation.CHECK_EXAMPLE', "Example: A,AAAA,MX");
 
 		$fields->addFieldToTab( "Root.Main", TextField::create('DnsChecks', $title)->setDescription($description) );
