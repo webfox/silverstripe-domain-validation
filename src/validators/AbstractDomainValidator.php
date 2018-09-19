@@ -2,6 +2,7 @@
 namespace Codem\DomainValidation;
 use League\Flysystem\Adapter\Local as FlysystemAdapterLocal;
 use Kevinrob\GuzzleCache\Strategy\PrivateCacheStrategy;
+use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
 use Kevinrob\GuzzleCache\Storage\FlysystemStorage;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use GuzzleHttp\Client as HttpClient;
@@ -19,13 +20,14 @@ abstract class AbstractDomainValidator {
 
 	use Configurable;
 
+	private static $ttl = 0;
+
 	protected $domain;
 	protected $protocol = "https";
 	protected $host = "";
 	protected $path = "";
 	protected $timeout = 5;
 	abstract public function performLookup($type);
-
 
 	protected function getCacheDir() {
 		$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'domainvalidation';
@@ -37,16 +39,31 @@ abstract class AbstractDomainValidator {
 	 */
 	protected function getCachePlugin() {
 		$stack = HandlerStack::create();
-		$stack->push(
-			new CacheMiddleware(
-				new PrivateCacheStrategy(
-					new FlysystemStorage(
-						new FlysystemAdapterLocal( $this->getCacheDir() )
+		$ttl = (int)$this->config()->get('ttl');
+		if($ttl > 0 ) {
+			$stack->push(
+				new CacheMiddleware(
+					new GreedyCacheStrategy(
+						new FlysystemStorage(
+							new FlysystemAdapterLocal( $this->getCacheDir() )
+						),
+						$ttl
+					)
+				),
+				'cache'
+			);
+		} else {
+			$stack->push(
+				new CacheMiddleware(
+					new PrivateCacheStrategy(
+						new FlysystemStorage(
+							new FlysystemAdapterLocal( $this->getCacheDir() )
 						)
 					)
 				),
 				'cache'
-		);
+			);
+		}
 		// Add this middleware to the top with `push`
 		$stack->push(new CacheMiddleware(), 'cache');
 		return $stack;
@@ -64,8 +81,15 @@ abstract class AbstractDomainValidator {
 		]);
 		$url = $this->protocol . "://" . $this->host . $this->path . ($query ? "?{$query}" : "");
 		$response = $client->get($url);
+		// $this->logHitMiss($response, $url);
 		// allow calling method to handle responses
 		return $response;
+	}
+
+	private function logHitMiss($response, $url) {
+		if($response && ($cache_info = $response->getHeader(CacheMiddleware::HEADER_CACHE_INFO))) {
+			Log::log("CACHE|{$cache_info[0]}|{$url}", 'INFO');
+		}
 	}
 
 	public function setDomain($domain) {

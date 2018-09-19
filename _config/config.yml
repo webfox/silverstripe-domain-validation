@@ -1,6 +1,8 @@
 ---
 Name: codem-domain-validation
 ---
+Codem\DomainValidation\AbstractDomainValidator:
+    ttl: 0
 Codem\DomainValidation\MxValidatedEmailField:
     extensions:
         - 'Codem\DomainValidation\FieldExtension'
