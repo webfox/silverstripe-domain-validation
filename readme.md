@@ -5,7 +5,7 @@ Minimise the hassle of domain and email address typos using this module!
 Some APIs reject requests if the domain is invalid e.g user@examplecom, with this module you can check for existing DNS records to minimise these issues.
 
 ## Requirements
-Silverstripe 3, currently. SS4 upgrade -> PRs welcome :)
+Silverstripe 3, see the feature-ss4 branch for Silverstripe 4.
 
 ## Features
 + Plugs into Cloudflare DNS over HTTPS
@@ -53,8 +53,10 @@ The ```ValidatedDomainField``` allows for strict and non-strict checking (defaul
 
 ## Install
 ```
-/path/to/php /path/to/composer require codem/silverstripe-domain-validation:~n.N
+/path/to/php /path/to/composer require codem/silverstripe-domain-validation:dev-master
 ```
+
+This is a pre-release and is not in Packagist just yet.
 
 # Author
 Codem
