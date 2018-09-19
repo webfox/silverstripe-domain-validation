@@ -36,9 +36,9 @@ class EditableSelectableLookupField extends EditableFormField {
 	 * Add default values to database
 	 * @var array
 	 */
-	private static $defaults = array(
+	private static $defaults = [
 		'StrictCheck' => 0
-	);
+	];
 
 	/**
 	 * CMS Fields
@@ -48,8 +48,8 @@ class EditableSelectableLookupField extends EditableFormField {
 	{
 		$fields = parent::getCMSFields();
 
-		$title = _t('DomainValidation.CHECK_INSTRUCTIONS', 'Selectable DNS checks. Separate each value by a comma.');
-		$description = _t('DomainValidation.CHECK_EXAMPLE', "Example: A,AAAA,MX");
+		$title = _t('DomainValidation.CHECK_INSTRUCTIONS_MULTI', 'Selectable DNS checks. Separate each value by a comma.');
+		$description = _t('DomainValidation.CHECK_EXAMPLE_MULTI', "Any supported DNS record type (https://en.wikipedia.org/wiki/List_of_DNS_record_types)");
 
 		$fields->addFieldToTab( "Root.Main", TextField::create('DnsChecks', $title)->setDescription($description) );
 
