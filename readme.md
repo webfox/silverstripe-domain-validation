@@ -1,11 +1,16 @@
 # Domain Validation module for Silverstripe
 
-Minimise the hassle of domain and email address typos using this module!
+This module provides a set of fields to allow domain lookup via DNS over HTTPS services.
 
-Some APIs reject requests if the domain is invalid e.g user@examplecom, with this module you can check for existing DNS records to minimise these issues.
++ Validated Email Field - validates the domain part of a provided email address via MX lookup
++ Validated Domain Field - validates any domain via the configured record type (default: A)
++ Selectable Lookup Field -  validates any domain via multiple, selectable record types
+
+Some APIs reject requests if a domain or domain part is invalid e.g user@examplecom or user@hotmailcom
+With this module you can check values using DoH prior to submitting or saving them.
 
 ## Requirements
-Silverstripe 3, currently. SS4 upgrade -> PRs welcome :)
+Silverstripe 4 / see composer.json
 
 ## Features
 + Plugs into Cloudflare DNS over HTTPS
@@ -35,7 +40,7 @@ $service->hasMxRecord('1 some.host');
 use Codem\DomainValidation\CloudflareDnsOverHttps;
 ...
 $domain = "google.com"
-$service = new GoogleDnsOverHttps();
+$service = new CloudflareDnsOverHttps();
 $service->setDomain($domain);
 $results = [];
 $results['AAAA'] = $service->performLookup('AAAA');
@@ -45,16 +50,21 @@ $results['A']= $service->performLookup('A');
 See DomainValidationForm in the source for a full example
 
 ### UserForm field
-Editable form fields are available. The ```EditableSelectableLookupField``` field allows for DnsChecks to be configured and strict checking.
+Editable form fields are available for the silverstripe/userforms module
 
-The ```ValidatedDomainField``` allows for strict and non-strict checking (default)
+The ```EditableSelectableLookupField``` field allows for DnsChecks to be configured along with strict checking.
+The ```ValidatedDomainField``` allows for configurable record type and strict/non-strict checking.
+
 + Strict Checking - the lookup must return entries for each record type requested
 + Non Strict Checking - the lookup can return any number of entries for the field to validate as OK
 
 ## Install
+
 ```
-/path/to/php /path/to/composer require codem/silverstripe-domain-validation:~n.N
+/path/to/php /path/to/composer require codem/silverstripe-domain-validation:^n.N
 ```
+
+This is a pre-release, not currently in Packagist.
 
 # Author
 Codem

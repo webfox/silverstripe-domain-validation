@@ -1,5 +1,5 @@
 {
-	"description": "Domain Validation module for Silverstripe",
+	"description": "A set of fields, including editable userform fields to perform domain validation via DNS over HTTPS",
 	"name": "codem/silverstripe-domain-validation",
 	"type": "silverstripe-vendormodule",
 	"keywords": [
