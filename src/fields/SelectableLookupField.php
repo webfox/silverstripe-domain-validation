@@ -15,7 +15,7 @@ class SelectableLookupField extends CompositeField implements FieldInterface {
 		$domain_field = ValidatedDomainField::create($this->name . "[domain]", $domain_field_title, $value);
 		$domain_field->beStrict($strict_checking);
 		$lookup_field_title = _t("DomainValidation.CHECKS_TO_PERFORM", "Check");
-		$lookup_field = ListboxField::create($this->name . "[lookup]", $lookup_field_title, $dns_checks)->setMultiple(true);
+		$lookup_field = ListboxField::create($this->name . "[lookup]", $lookup_field_title, $dns_checks);
 		$children = FieldList::create(
 			$domain_field,
 			$lookup_field
