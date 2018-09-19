@@ -77,7 +77,7 @@ class FieldExtension extends Extension {
 			return $this->owner->noValidators($validator, $type);
 		}
 
-		Log::log("GOT " . count($domain_validators) , " validators", 'INFO');
+		Log::log("GOT " . count($domain_validators) . " validators", 'INFO');
 
 		return $domain_validators;
 	}
