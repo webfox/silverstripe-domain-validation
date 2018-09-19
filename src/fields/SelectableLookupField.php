@@ -9,6 +9,8 @@ use SilverStripe\Forms\FieldList;
  */
 class SelectableLookupField extends CompositeField implements FieldInterface {
 
+	private $answers = [];
+
 	public function setFields($name, $value, $dns_checks, $strict_checking = false) {
 		$this->setName($name);
 		$domain_field_title = _t("DomainValidation.DOMAIN", "Domain");
@@ -30,16 +32,8 @@ class SelectableLookupField extends CompositeField implements FieldInterface {
 		return 'domainvalidation text';
 	}
 
-
-
-	private $answers = [];
 	public function getAnswers() {
-		$name = $this->getName();
-		$answers = [];
-		if($domain_field = $this->children->dataFieldByName($name . "[domain]")) {
-			$answers = $domain_field->getAnswers();
-		}
-		return $answers;
+		return $this->answers;
 	}
 
 	/**
@@ -49,6 +43,8 @@ class SelectableLookupField extends CompositeField implements FieldInterface {
 	 * @return bool
 	 */
 	public function validate($validator) {
+
+		$this->answers = [];
 
 		$dns_checks_requested = [];
 		$name = $this->getName();
@@ -99,16 +95,14 @@ class SelectableLookupField extends CompositeField implements FieldInterface {
 			return false;
 		}
 
-		$valid = true;
-		foreach($this->children as $idx => $child) {
-			$valid = ($child && $child->validate($validator) && $valid);
-		}
+		// validate the domain field
+		$valid = $domain_field->validate($validator);
 
 		if(!$valid) {
 
 			// check what validation error we need to show
-			$answers = $this->getAnswers();
-			$answer_keys = array_keys($answers);
+			$this->answers = $domain_field->getAnswers();
+			$answer_keys = array_keys($this->answers);
 			$domain = $domain_field->Value();
 			if(empty($answer_keys)) {
 				$validator->validationError(
