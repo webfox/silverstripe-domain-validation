@@ -54,7 +54,7 @@ class CloudflareDnsOverHttps extends AbstractDomainValidator {
 
 
 		} catch (Exception $e) {
-			$error = "CloudflareDnsOverHttps lookup failed with error: {$e->getMessage()} for {$this->domain}/{$type}. Exception=" . get_class($e);
+			$error = "CloudflareDnsOverHttps lookup failed with error: {$e->getMessage()}. Exception=" . get_class($e);
 			Log::log($error, 'INFO');
 		}
 
