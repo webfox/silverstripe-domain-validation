@@ -77,8 +77,6 @@ class FieldExtension extends Extension {
 			return $this->owner->noValidators($validator, $type);
 		}
 
-		Log::log("GOT " . count($domain_validators) . " validators", 'INFO');
-
 		return $domain_validators;
 	}
 
@@ -93,8 +91,6 @@ class FieldExtension extends Extension {
 		} else {
 			$dns_checks = $this->owner->config()->get('dns_checks');
 		}
-
-		$dns_checks = $this->owner->config()->get('checks');
 		if(!is_array($dns_checks) || empty($dns_checks)) {
 			$message = sprintf(
 				_t('DomainValidation.NO_CHECKS', "Sorry, we could not validate the %s '%s' at this time"),

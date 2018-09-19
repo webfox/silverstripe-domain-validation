@@ -13,17 +13,10 @@ class ValidatedDomainField extends TextField implements FieldInterface {
 	public $custom_clients = [];
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public function Type() {
-		return 'domainvalidated text';
-	}
-
-	/**
 	 * @var array
 	 * @note one or more checks to perform. Can be A, AAAA, CNAME or anything else really
 	 */
-	private static $checks = [
+	private static $dns_checks = [
 		'A', // by default only do an A record check
 	];
 
@@ -37,6 +30,14 @@ class ValidatedDomainField extends TextField implements FieldInterface {
 
 	private $answers = [];
 	private $be_strict = false;
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function Type() {
+		return 'domainvalidated text';
+	}
+
 	public function getAnswers() {
 		return $this->answers;
 	}
@@ -85,7 +86,6 @@ class ValidatedDomainField extends TextField implements FieldInterface {
 				$validated = true;
 			}
 		} catch (Exception $e) {
-			Log::log("ERROR: " . $e->getMessage(), 'INFO');
 			$message = sprintf(
 						_t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
 						$this->value

@@ -44,11 +44,11 @@ class DomainLookupForm extends Form {
    * @var array
    * Default checks to perform, override for your own use
    */
-  private static $checks = [
+  private static $dns_checks = [
     "A",
   ];
 
-  private $answers;
+  private $answers = [];
 
   /**
    * @var string

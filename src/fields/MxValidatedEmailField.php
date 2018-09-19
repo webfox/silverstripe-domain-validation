@@ -13,13 +13,6 @@ class MxValidatedEmailField extends EmailField implements FieldInterface {
 	public $custom_clients = [];
 
 	/**
-	 * {@inheritdoc}
-	 */
-	public function Type() {
-		return 'email text';
-	}
-
-	/**
 	 * @var array
 	 * @note one or more domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
 	 */
@@ -28,6 +21,14 @@ class MxValidatedEmailField extends EmailField implements FieldInterface {
 	];
 
 	private $answers = [];
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function Type() {
+		return 'email text';
+	}
+
 	/**
 	 * Returns answers, if any, of a domain validation check
 	 */
@@ -64,7 +65,6 @@ class MxValidatedEmailField extends EmailField implements FieldInterface {
 			$this->answers = $result;
 			$validated = true;
 		} catch (Exception $e) {
-			Log::log("ERROR: " . $e->getMessage(), 'INFO');
 			$message = sprintf(
 							_t('DomainValidation.NO_MX_RECORD', "The e-mail address '%s' does not appear to be valid"),
 							$this->value
