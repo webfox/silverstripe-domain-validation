@@ -17,7 +17,7 @@ class MxValidatedEmailField extends EmailField implements FieldInterface {
 	 * @note one or more domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
 	 */
 	private static $dns_clients = [
-		'Codem\DomainValidation\CloudflareDnsOverHttps',
+		CloudflareDnsOverHttps::class
 	];
 
 	private $answers = [];

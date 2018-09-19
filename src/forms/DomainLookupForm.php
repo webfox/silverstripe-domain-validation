@@ -54,7 +54,7 @@ class DomainLookupForm extends Form {
    * @var string
    * A single client that extends {@link Codem\DomainValidation\AbstractDomainValidator}
    */
-  private static $dns_client = 'Codem\DomainValidation\CloudflareDnsOverHttps';
+  private static $dns_client = CloudflareDnsOverHttps::class;
 
   private static $allowed_actions = [
     'doDomainValidation'
