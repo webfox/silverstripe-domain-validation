@@ -83,4 +83,12 @@ class EditableSelectableLookupField extends EditableFormField {
 		$this->doUpdateFormField($field);
 		return $field;
 	}
+
+    public function getValueFromData($data) {
+        $entries = (isset($data[$this->Name])) ? $data[$this->Name] : false;
+        if($entries) {
+            return json_encode($entries);
+        }
+        return "";
+    }
 }

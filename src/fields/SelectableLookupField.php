@@ -61,6 +61,12 @@ class SelectableLookupField extends CompositeField implements FieldInterface {
 		}
 
 		$domain_field_value = $domain_field->Value();
+
+		if(!$domain_field->Required() && $domain_field_value == "") {
+			// ignore
+			return false;
+		}
+
 		if($domain_field_value == "") {
 			$validator->validationError(
 				$name . "[domain]",

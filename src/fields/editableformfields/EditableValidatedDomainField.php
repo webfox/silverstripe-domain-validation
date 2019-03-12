@@ -77,6 +77,18 @@ class EditableValidatedDomainField extends EditableFormField {
       return "A";
     }
 
+    public function getValueFromData($data) {
+        $domain = (isset($data[$this->Name])) ? $data[$this->Name] : "";
+        if($domain) {
+            $data = [
+                'domain' => $domain,
+                'dnscheck' => $this->DnsCheck
+            ];
+            return json_encode($data);
+        }
+        return "";
+    }
+
     public function getFormField()
     {
         $check = $this->DnsCheck ? $this->DnsCheck : $this->DefaultDnsCheck();

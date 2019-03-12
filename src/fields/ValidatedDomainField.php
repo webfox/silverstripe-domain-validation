@@ -51,6 +51,10 @@ class ValidatedDomainField extends TextField implements FieldInterface {
 	}
 
 	public function validate($validator) {
+        if(!$this->Required() && $this->value == "") {
+            return true;
+        }
+
 		$this->answers = [];
 		$lang_type = _t('DomainValidation.DOMAIN', 'domain');
 		if($this->value == "") {
