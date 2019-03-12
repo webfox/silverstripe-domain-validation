@@ -1,6 +1,6 @@
 <?php
 namespace Codem\DomainValidation;
-use SapphireTest;
+use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests for GoogleDnsOverHttps

@@ -1,9 +1,9 @@
 <?php
 namespace Codem\DomainValidation;
-use FunctionalTest;
+use SilverStripe\Dev\FunctionalTest;
 use PHPUnit_Framework_AssertionFailedError;
 use Exception;
-use Validator;
+use SilverStripe\Forms\Validator;
 
 /**
  * Test validation of various addresses within {@link MxValidatedEmailField}
