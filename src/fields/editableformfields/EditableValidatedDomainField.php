@@ -1,7 +1,8 @@
 <?php
 namespace Codem\DomainValidation;
-use SilverStripe\Forms\TextField;
+
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\UserForms\Model\EditableFormField;
 
 /**
@@ -10,7 +11,8 @@ use SilverStripe\UserForms\Model\EditableFormField;
  * Allow users to define a validating editable domain validator field for a UserDefinedForm
  */
 
-class EditableValidatedDomainField extends EditableFormField {
+class EditableValidatedDomainField extends EditableFormField
+{
     private static $singular_name = 'Text Field with DNS validation';
 
     private static $plural_name = 'Text Fields with DNS validation';
@@ -22,8 +24,8 @@ class EditableValidatedDomainField extends EditableFormField {
      * @var array
      */
     private static $db = [
-      'DnsCheck' => 'Varchar(16)',// the single DNS check to perform
-      'StrictCheck' => 'Boolean',
+        'DnsCheck' => 'Varchar(16)', // the single DNS check to perform
+        'StrictCheck' => 'Boolean',
     ];
 
     /**
@@ -31,8 +33,8 @@ class EditableValidatedDomainField extends EditableFormField {
      * @var array
      */
     private static $defaults = [
-      'DnsCheck' => 'A',
-      'StrictCheck' => 0
+        'DnsCheck' => 'A',
+        'StrictCheck' => 0,
     ];
 
     /**
@@ -44,13 +46,14 @@ class EditableValidatedDomainField extends EditableFormField {
     /**
      * Event handler called before writing to the database.
      */
-    public function onBeforeWrite() {
-      parent::onBeforeWrite();
-      $this->DnsCheck = trim($this->DnsCheck);
-      if($this->DnsCheck == "") {
-        $this->DnsCheck = self::$defaults['DnsCheck'];
-      }
-      $this->DnsCheck = strtoupper($this->DnsCheck);
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->DnsCheck = trim($this->DnsCheck);
+        if ($this->DnsCheck == "") {
+            $this->DnsCheck = self::$defaults['DnsCheck'];
+        }
+        $this->DnsCheck = strtoupper($this->DnsCheck);
     }
 
     /**
@@ -59,30 +62,32 @@ class EditableValidatedDomainField extends EditableFormField {
      */
     public function getCMSFields()
     {
-      $fields = parent::getCMSFields();
+        $fields = parent::getCMSFields();
 
-      $title = _t('DomainValidation.CHECK_INSTRUCTIONS', 'DNS check to perform');
-      $description = _t('DomainValidation.CHECK_EXAMPLE', "Any supported DNS record type (https://en.wikipedia.org/wiki/List_of_DNS_record_types), default 'A'");
+        $title = _t('DomainValidation.CHECK_INSTRUCTIONS', 'DNS check to perform');
+        $description = _t('DomainValidation.CHECK_EXAMPLE', "Any supported DNS record type (https://en.wikipedia.org/wiki/List_of_DNS_record_types), default 'A'");
 
-      $fields->addFieldToTab( "Root.Main", TextField::create('DnsCheck', $title)->setDescription($description) );
+        $fields->addFieldToTab("Root.Main", TextField::create('DnsCheck', $title)->setDescription($description));
 
-      $title = _t('DomainValidation.STRICT_CHECK_INSTRUCTIONS', 'Perform a strict check.');
-      $description = _t('DomainValidation.STRICT_CHECK_EXAMPLE', "When checked, the DNS check performed must return a valid, non-empty response for the field to validate.");
-      $fields->addFieldToTab( "Root.Main", CheckboxField::create('StrictCheck', $title)->setDescription($description) );
+        $title = _t('DomainValidation.STRICT_CHECK_INSTRUCTIONS', 'Perform a strict check.');
+        $description = _t('DomainValidation.STRICT_CHECK_EXAMPLE', "When checked, the DNS check performed must return a valid, non-empty response for the field to validate.");
+        $fields->addFieldToTab("Root.Main", CheckboxField::create('StrictCheck', $title)->setDescription($description));
 
-      return $fields;
+        return $fields;
     }
 
-    public function DefaultDnsCheck() {
-      return "A";
+    public function DefaultDnsCheck()
+    {
+        return "A";
     }
 
-    public function getValueFromData($data) {
+    public function getValueFromData($data)
+    {
         $domain = (isset($data[$this->Name])) ? $data[$this->Name] : "";
-        if($domain) {
+        if ($domain) {
             $data = [
                 'domain' => $domain,
-                'dnscheck' => $this->DnsCheck
+                'dnscheck' => $this->DnsCheck,
             ];
             return json_encode($data);
         }
@@ -96,9 +101,9 @@ class EditableValidatedDomainField extends EditableFormField {
             ->setFieldHolderTemplate('UserFormsField_holder')
             ->setTemplate('UserFormsField')
             ->setAttribute('data-record-type', $this->DnsCheck)
-            ->beStrict( $this->StrictCheck == 1 )
+            ->beStrict($this->StrictCheck == 1)
             ->clearCustomDnsChecks()
-            ->addCustomDnsCheck( $this->DnsCheck );
+            ->addCustomDnsCheck($this->DnsCheck);
 
         $this->doUpdateFormField($field);
         return $field;

@@ -1,5 +1,6 @@
 <?php
 namespace Codem\DomainValidation;
+
 use SilverStripe\Forms\TextField;
 use Exception;
 
@@ -9,101 +10,101 @@ use Exception;
  */
 class ValidatedDomainField extends TextField implements FieldInterface {
 
-	public $custom_dns_checks = [];
-	public $custom_clients = [];
+    public $custom_dns_checks = [];
+    public $custom_clients = [];
 
-	/**
-	 * @var array
-	 * @note one or more checks to perform. Can be A, AAAA, CNAME or anything else really
-	 */
-	private static $dns_checks = [
-		'A', // by default only do an A record check
-	];
+    /**
+     * @var array
+     * @note one or more checks to perform. Can be A, AAAA, CNAME or anything else really
+     */
+    private static $dns_checks = [
+        'A', // by default only do an A record check
+    ];
 
-	/**
-	 * @var array
-	 * @note one or more domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
-	 */
-	private static $dns_clients = [
-		CloudflareDnsOverHttps::class,
-	];
+    /**
+     * @var array
+     * @note one or more domain validation class that extends Codem\DomainValidation\AbstractDomainValidator
+     */
+    private static $dns_clients = [
+        CloudflareDnsOverHttps::class,
+    ];
 
-	private $answers = [];
-	private $be_strict = false;
+    private $answers = [];
+    private $be_strict = false;
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function Type() {
-		return 'domainvalidated text';
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function Type() {
+        return 'domainvalidated text';
+    }
 
-	public function getAnswers() {
-		return $this->answers;
-	}
+    public function getAnswers() {
+        return $this->answers;
+    }
 
-	/**
-	 * If true, any empty response will cause validate to return false
-	 */
-	public function beStrict($is) {
-		$this->be_strict = $is;
-		return $this;
-	}
+    /**
+     * If true, any empty response will cause validate to return false
+     */
+    public function beStrict($is) {
+        $this->be_strict = $is;
+        return $this;
+    }
 
-	public function validate($validator) {
+    public function validate($validator) {
         if(!$this->Required() && $this->value == "") {
             return true;
         }
 
-		$this->answers = [];
-		$lang_type = _t('DomainValidation.DOMAIN', 'domain');
-		if($this->value == "") {
-			$validator->validationError(
-				$this->name,
-				sprintf(_t('DomainValidation.NO_DOMAIN_VALUE', "Please provide a %s"), $lang_type),
-				'validation'
-			);
-			return false;
-		}
-		$result = parent::validate($validator);
-		if(!$result) {
-			return false;
-		}
+        $this->answers = [];
+        $lang_type = _t('DomainValidation.DOMAIN', 'domain');
+        if($this->value == "") {
+            $validator->validationError(
+                $this->name,
+                sprintf(_t('DomainValidation.NO_DOMAIN_VALUE', "Please provide a %s"), $lang_type),
+                'validation'
+            );
+            return false;
+        }
+        $result = parent::validate($validator);
+        if(!$result) {
+            return false;
+        }
 
-		// assume that it's not valid
-		$validated = false;
-		try {
-			$result = $this->performDnsChecks($this->value, $validator, $lang_type);
-			$this->answers = $result;
-			if($this->be_strict) {
-				$dns_checks = $this->getDnsChecks($validator, $lang_type);
-				if(count($dns_checks) != count($this->answers)) {
-					throw new Exception("Domain validation lookup did not return answers for all request checks");
-				} else {
-					$validated = true;
-				}
-			} else if(empty($this->answers)) {
-				// no results returned at all :(
-				throw new Exception("No answers for requested DNS checks");
-			} else {
-				// not strict OR string AND all results returned
-				$validated = true;
-			}
-		} catch (Exception $e) {
-			$message = sprintf(
-						_t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
-						$this->value
-			);
-		}
+        // assume that it's not valid
+        $validated = false;
+        try {
+            $result = $this->performDnsChecks($this->value, $validator, $lang_type);
+            $this->answers = $result;
+            if($this->be_strict) {
+                $dns_checks = $this->getDnsChecks($validator, $lang_type);
+                if(count($dns_checks) != count($this->answers)) {
+                    throw new Exception("Domain validation lookup did not return answers for all request checks");
+                } else {
+                    $validated = true;
+                }
+            } else if(empty($this->answers)) {
+                // no results returned at all :(
+                throw new Exception("No answers for requested DNS checks");
+            } else {
+                // not strict OR string AND all results returned
+                $validated = true;
+            }
+        } catch (Exception $e) {
+            $message = sprintf(
+                        _t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
+                        $this->value
+            );
+        }
 
-		if(!$validated) {
-			$validator->validationError(
-				$this->name,
-				$message,
-				'validation'
-			);
-		}
-		return $validated;
+        if(!$validated) {
+            $validator->validationError(
+                $this->name,
+                $message,
+                'validation'
+            );
+        }
+        return $validated;
 
-	}
+    }
 }

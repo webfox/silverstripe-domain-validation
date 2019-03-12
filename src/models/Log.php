@@ -1,15 +1,18 @@
 <?php
 namespace Codem\DomainValidation;
-use SilverStripe\Core\Injector\Injector;
+
 use Psr\Log\LoggerInterface;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Ultra basic logging handler for SS_Log compat
  */
-class Log {
+class Log
+{
 
-  public static function log($message, $level = 'DEBUG', array $context = []) {
-    Injector::inst()->get(LoggerInterface::class)->log($level, (string)$message, $context);
-  }
+    public static function log($message, $level = 'DEBUG', array $context = [])
+    {
+        Injector::inst()->get(LoggerInterface::class)->log($level, (string) $message, $context);
+    }
 
 }
