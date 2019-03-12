@@ -68,7 +68,10 @@ class EditableSelectableLookupField extends EditableFormField {
 			foreach($checks as $check) {
 				$result[ $check ] = $check;
 			}
-		}
+		} else {
+            // only one
+            $result[ $dns_checks ] = $dns_checks;
+        }
 		return $result;
 	}
 
