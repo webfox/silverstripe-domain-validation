@@ -1,6 +1,8 @@
 ---
 Name: codem-domain-validation
 ---
+Codem\DomainValidation\AbstractDomainValidator:
+    ttl: 0
 Codem\DomainValidation\MxValidatedEmailField:
     extensions:
         - 'Codem\DomainValidation\FieldExtension'
@@ -9,11 +11,11 @@ Codem\DomainValidation\MxValidatedEmailField:
 Codem\DomainValidation\ValidatedDomainField:
     extensions:
         - 'Codem\DomainValidation\FieldExtension'
-    checks:
+    dns_checks:
         - A
     dns_clients:
         - 'Codem\DomainValidation\CloudflareDnsOverHttps'
 Codem\DomainValidation\DomainLookupForm:
-    checks:
+    dns_checks:
         - A
     dns_client: 'Codem\DomainValidation\CloudflareDnsOverHttps'

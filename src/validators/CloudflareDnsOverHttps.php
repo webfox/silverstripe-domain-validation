@@ -1,7 +1,7 @@
 <?php
 namespace Codem\DomainValidation;
+
 use Exception;
-use SS_Log;
 
 /**
  * The Cloudflare DNS over HTTPS (DOH) validator can perform various DNS looksup on domains and domain parts of email addresses
@@ -10,57 +10,57 @@ use SS_Log;
  */
 class CloudflareDnsOverHttps extends AbstractDomainValidator {
 
-	protected $domain;
-	protected $protocol = "https";
-	protected $host = "cloudflare-dns.com";
-	protected $path = "/dns-query";
+    protected $domain;
+    protected $protocol = "https";
+    protected $host = "cloudflare-dns.com";
+    protected $path = "/dns-query";
 
-	/**
-	 * @returns GuzzleHttp\Psr7\Stream
-	 */
-	public function performLookup($type = 'MX') {
-		if(!$this->domain) {
-			throw new Exception("No domain provided for {$type} lookup");
-		}
+    /**
+     * @returns GuzzleHttp\Psr7\Stream
+     */
+    public function performLookup($type = 'MX') {
+        if(!$this->domain) {
+            throw new Exception("No domain provided for {$type} lookup");
+        }
 
-		try {
+        try {
 
-			// will throw an Exception
-			$response = $this->doGet([
-				'ct' => 'application/dns-json',
-				'type' => $type,
-				'name' => $this->domain,
-			]);
+            // will throw an Exception
+            $response = $this->doGet([
+                'ct' => 'application/dns-json',
+                'type' => $type,
+                'name' => $this->domain,
+            ]);
 
-			$body = (string)$response->getBody();
-			if(!$body) {
-				throw new Exception("CloudflareDnsOverHttps request returned empty body for {$this->domain}/{$type}");
-			}
-			$decoded = json_decode($body, false);
+            $body = (string)$response->getBody();
+            if(!$body) {
+                throw new Exception("CloudflareDnsOverHttps request returned empty body for {$this->domain}/{$type}");
+            }
+            $decoded = json_decode($body, false);
 
-			if(!isset($decoded->Status)) {
-				throw new Exception("No 'Status' response from Cloudflare for {$this->domain}/{$type}");
-			}
+            if(!isset($decoded->Status)) {
+                throw new Exception("No 'Status' response from Cloudflare for {$this->domain}/{$type}");
+            }
 
-			// https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-6
-			if($decoded->Status != 0) {
-				throw new Exception("Cloudflare responded with a non-zero Status response for {$this->domain}/{$type}");
-			}
+            // https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-6
+            if($decoded->Status != 0) {
+                throw new Exception("Cloudflare responded with a non-zero Status response for {$this->domain}/{$type}");
+            }
 
-			if(!isset($decoded->Answer)) {
-				throw new Exception("Cloudflare responded without an answer for {$this->domain}/{$type}");
-			}
+            if(!isset($decoded->Answer)) {
+                throw new Exception("Cloudflare responded without an answer for {$this->domain}/{$type}");
+            }
 
-			return $decoded->Answer;
+            return $decoded->Answer;
 
 
-		} catch (Exception $e) {
-			$error = "CloudflareDnsOverHttps lookup failed with error: {$e->getMessage()} for {$this->domain}/{$type}. Exception=" . get_class($e);
-			SS_Log::log($error, SS_Log::INFO);
-		}
+        } catch (Exception $e) {
+            $error = "CloudflareDnsOverHttps lookup failed with error: {$e->getMessage()}. Exception=" . get_class($e);
+            Log::log($error, 'INFO');
+        }
 
-		return false;
+        return false;
 
-	}
+    }
 
 }
