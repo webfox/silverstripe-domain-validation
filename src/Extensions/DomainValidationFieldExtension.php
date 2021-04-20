@@ -9,7 +9,6 @@ use SilverStripe\Forms\Validator;
  */
 class FieldExtension extends Extension
 {
-
     public function addCustomDnsCheck($dns_check)
     {
         $this->owner->custom_dns_checks[$dns_check] = $dns_check;
@@ -123,7 +122,6 @@ class FieldExtension extends Extension
      */
     public function performDnsChecks($domain, Validator $validator, $lang_type)
     {
-
         $dns_checks = $this->owner->getDnsChecks($validator, $lang_type);
         $domain_validators = $this->owner->getDnsClients($validator, $lang_type);
         $answers = [];
@@ -150,7 +148,6 @@ class FieldExtension extends Extension
      */
     public function performMxRecordCheck($domain, Validator $validator, $lang_type)
     {
-
         $domain_validators = $this->owner->getDnsClients($validator, $lang_type);
         $answers = [];
         foreach ($domain_validators as $domain_validator) {

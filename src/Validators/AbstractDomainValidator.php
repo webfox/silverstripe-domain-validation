@@ -19,7 +19,6 @@ use SilverStripe\Core\Config\Configurable;
  */
 abstract class AbstractDomainValidator
 {
-
     use Configurable;
 
     private static $ttl = 0;

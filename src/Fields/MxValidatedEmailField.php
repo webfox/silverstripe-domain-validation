@@ -9,7 +9,6 @@ use SilverStripe\Forms\EmailField;
  */
 class MxValidatedEmailField extends EmailField implements FieldInterface
 {
-
     public $custom_dns_checks = [];
     public $custom_clients = [];
 
@@ -83,6 +82,5 @@ class MxValidatedEmailField extends EmailField implements FieldInterface
             );
         }
         return $validated;
-
     }
 }

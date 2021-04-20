@@ -8,8 +8,8 @@ use Exception;
  * A field that checks a value (a purported domain) against various DNS records
  * This field does not check the existence of a domain name, as domain names can exist without any DNS records e.g an intranet not in DNS
  */
-class ValidatedDomainField extends TextField implements FieldInterface {
-
+class ValidatedDomainField extends TextField implements FieldInterface
+{
     public $custom_dns_checks = [];
     public $custom_clients = [];
 
@@ -35,30 +35,34 @@ class ValidatedDomainField extends TextField implements FieldInterface {
     /**
      * {@inheritdoc}
      */
-    public function Type() {
+    public function Type()
+    {
         return 'domainvalidated text';
     }
 
-    public function getAnswers() {
+    public function getAnswers()
+    {
         return $this->answers;
     }
 
     /**
      * If true, any empty response will cause validate to return false
      */
-    public function beStrict($is) {
+    public function beStrict($is)
+    {
         $this->be_strict = $is;
         return $this;
     }
 
-    public function validate($validator) {
-        if(!$this->Required() && $this->value == "") {
+    public function validate($validator)
+    {
+        if (!$this->Required() && $this->value == "") {
             return true;
         }
 
         $this->answers = [];
         $lang_type = _t('DomainValidation.DOMAIN', 'domain');
-        if($this->value == "") {
+        if ($this->value == "") {
             $validator->validationError(
                 $this->name,
                 sprintf(_t('DomainValidation.NO_DOMAIN_VALUE', "Please provide a %s"), $lang_type),
@@ -67,7 +71,7 @@ class ValidatedDomainField extends TextField implements FieldInterface {
             return false;
         }
         $result = parent::validate($validator);
-        if(!$result) {
+        if (!$result) {
             return false;
         }
 
@@ -76,14 +80,14 @@ class ValidatedDomainField extends TextField implements FieldInterface {
         try {
             $result = $this->performDnsChecks($this->value, $validator, $lang_type);
             $this->answers = $result;
-            if($this->be_strict) {
+            if ($this->be_strict) {
                 $dns_checks = $this->getDnsChecks($validator, $lang_type);
-                if(count($dns_checks) != count($this->answers)) {
+                if (count($dns_checks) != count($this->answers)) {
                     throw new Exception("Domain validation lookup did not return answers for all request checks");
                 } else {
                     $validated = true;
                 }
-            } else if(empty($this->answers)) {
+            } elseif (empty($this->answers)) {
                 // no results returned at all :(
                 throw new Exception("No answers for requested DNS checks");
             } else {
@@ -92,12 +96,12 @@ class ValidatedDomainField extends TextField implements FieldInterface {
             }
         } catch (Exception $e) {
             $message = sprintf(
-                        _t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
-                        $this->value
+                _t('DomainValidation.NO_MX_RECORD', "The domain '%s' could not be validated"),
+                $this->value
             );
         }
 
-        if(!$validated) {
+        if (!$validated) {
             $validator->validationError(
                 $this->name,
                 $message,
@@ -105,6 +109,5 @@ class ValidatedDomainField extends TextField implements FieldInterface {
             );
         }
         return $validated;
-
     }
 }

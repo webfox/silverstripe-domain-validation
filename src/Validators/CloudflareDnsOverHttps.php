@@ -8,8 +8,8 @@ use Exception;
  * Note that their specification follows Google's - "For lack of an agreed upon JSON schema for DNS over HTTPS in the IETF, Cloudflare has chosen to follow the same schema as Google’s DNS over HTTPS resolver." ... but that there is no accepted standard at the moment
  * @see https://developers.cloudflare.com/1.1.1.1/dns-over-https/json-format/
  */
-class CloudflareDnsOverHttps extends AbstractDomainValidator {
-
+class CloudflareDnsOverHttps extends AbstractDomainValidator
+{
     protected $domain;
     protected $protocol = "https";
     protected $host = "cloudflare-dns.com";
@@ -18,8 +18,9 @@ class CloudflareDnsOverHttps extends AbstractDomainValidator {
     /**
      * @returns GuzzleHttp\Psr7\Stream
      */
-    public function performLookup($type = 'MX') {
-        if(!$this->domain) {
+    public function performLookup($type = 'MX')
+    {
+        if (!$this->domain) {
             throw new Exception("No domain provided for {$type} lookup");
         }
 
@@ -33,34 +34,30 @@ class CloudflareDnsOverHttps extends AbstractDomainValidator {
             ]);
 
             $body = (string)$response->getBody();
-            if(!$body) {
+            if (!$body) {
                 throw new Exception("CloudflareDnsOverHttps request returned empty body for {$this->domain}/{$type}");
             }
             $decoded = json_decode($body, false);
 
-            if(!isset($decoded->Status)) {
+            if (!isset($decoded->Status)) {
                 throw new Exception("No 'Status' response from Cloudflare for {$this->domain}/{$type}");
             }
 
             // https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-6
-            if($decoded->Status != 0) {
+            if ($decoded->Status != 0) {
                 throw new Exception("Cloudflare responded with a non-zero Status response for {$this->domain}/{$type}");
             }
 
-            if(!isset($decoded->Answer)) {
+            if (!isset($decoded->Answer)) {
                 throw new Exception("Cloudflare responded without an answer for {$this->domain}/{$type}");
             }
 
             return $decoded->Answer;
-
-
         } catch (Exception $e) {
             $error = "CloudflareDnsOverHttps lookup failed with error: {$e->getMessage()}. Exception=" . get_class($e);
             Log::log($error, 'INFO');
         }
 
         return false;
-
     }
-
 }

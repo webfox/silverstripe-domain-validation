@@ -10,7 +10,6 @@ use SilverStripe\Forms\ListboxField;
  */
 class SelectableLookupField extends CompositeField implements FieldInterface
 {
-
     private $answers = [];
 
     public function setFields($name, $value, $dns_checks, $strict_checking = false)
@@ -49,7 +48,6 @@ class SelectableLookupField extends CompositeField implements FieldInterface
      */
     public function validate($validator)
     {
-
         $this->answers = [];
 
         $dns_checks_requested = [];
