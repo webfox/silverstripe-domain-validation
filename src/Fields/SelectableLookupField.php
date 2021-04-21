@@ -1,6 +1,7 @@
 <?php
 namespace Codem\DomainValidation;
 
+use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ListboxField;
@@ -19,7 +20,7 @@ class SelectableLookupField extends CompositeField implements FieldInterface
         $domain_field = ValidatedDomainField::create($this->name . "[domain]", $domain_field_title, $value);
         $domain_field->beStrict($strict_checking);
         $lookup_field_title = _t("DomainValidation.CHECKS_TO_PERFORM", "Check");
-        $lookup_field = ListboxField::create($this->name . "[lookup]", $lookup_field_title, $dns_checks);
+        $lookup_field = CheckboxSetField::create($this->name . "[lookup]", $lookup_field_title, $dns_checks);
         $children = FieldList::create(
             $domain_field,
             $lookup_field
@@ -74,7 +75,10 @@ class SelectableLookupField extends CompositeField implements FieldInterface
         if ($domain_field_value == "") {
             $validator->validationError(
                 $name . "[domain]",
-                sprintf(_t('DomainValidation.NO_DOMAIN_VALUE', "Please provide a %s"), _t('DomainValidation.DOMAIN', 'domain')),
+                _t(
+                    'DomainValidation.NO_DOMAIN_VALUE',
+                    "Please provide a domain"
+                ),
                 'validation'
             );
             return false;
@@ -85,7 +89,13 @@ class SelectableLookupField extends CompositeField implements FieldInterface
         if (!is_array($dns_checks_requested) || empty($dns_checks_requested) || !$dns_checks_requested) {
             $validator->validationError(
                 $name . "[lookup]",
-                sprintf(_t('DomainValidation.MISSING_CHECKS', "Please select at least one value from the '%s' field."), $lookup_field_title),
+                _t(
+                    'DomainValidation.MISSING_CHECKS',
+                    "Please select at least one value from the '{lookup_field_title}' field.",
+                    [
+                        'lookup_field_title' => $lookup_field_title
+                    ]
+                ),
                 'validation'
             );
             return false;
@@ -99,7 +109,10 @@ class SelectableLookupField extends CompositeField implements FieldInterface
         if (empty($dns_checks_requested)) {
             $validator->validationError(
                 $name . "[lookup]",
-                _t('DomainValidation.NO_CHECKS_SELECTED', "Please select at least one DNS check"),
+                _t(
+                    'DomainValidation.NO_CHECKS_SELECTED',
+                    "Please select at least one DNS check"
+                ),
                 'validation'
             );
             return false;
@@ -117,20 +130,26 @@ class SelectableLookupField extends CompositeField implements FieldInterface
             if (empty($answer_keys)) {
                 $validator->validationError(
                     $name . "[domain]",
-                    sprintf(
-                        _t('DomainValidation.ALL_CHECKS_FAILED', "The domain '%s' returned no matching DNS records."),
-                        $domain
+                    _t(
+                        'DomainValidation.ALL_CHECKS_FAILED',
+                        "The domain '{domain}' returned no matching DNS records.",
+                        [
+                            'domain' => $domain
+                        ]
                     ),
                     'validation'
                 );
             } else {
-                $answer_keys_string = implode(",", $answer_keys);
+                $missing = array_diff($dns_checks_requested, $answer_keys);
                 $validator->validationError(
                     $name . "[domain]",
-                    sprintf(
-                        _t('DomainValidation.SOME_CHECKS_FAILED', "Some of the DNS checks failed for the domain '%s'. The domain has records for the following types: %s"),
-                        $domain,
-                        $answer_keys_string
+                    _t(
+                        'DomainValidation.SOME_CHECKS_FAILED',
+                        "Some of the DNS checks failed for the domain '{domain}'. The domain is missing records for the following types: {missing}",
+                        [
+                            'domain' => $domain,
+                            'missing' => implode(", ", $missing)
+                        ]
                     ),
                     'validation'
                 );
