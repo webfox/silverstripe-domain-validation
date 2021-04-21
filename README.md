@@ -1,6 +1,6 @@
 # Domain Validation module for Silverstripe
 
-This module provides a set of fields to allow domain lookup via DNS over HTTPS services.
+This module provides a set of fields to allow domain lookup via DNS over HTTPS (DoH) services, currently Cloudflare and Google.
 
 + Validated Email Field - validates the domain part of a provided email address via MX lookup
 + Validated Domain Field - validates any domain via the configured record type (default: A)
