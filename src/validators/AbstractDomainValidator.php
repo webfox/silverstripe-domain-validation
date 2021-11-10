@@ -54,14 +54,14 @@ abstract class AbstractDomainValidator extends SS_Object {
 	 * Do a GET request
 	 * @returns
 	 */
-	protected function doGet(array $args) {
+	protected function doGet(array $args, array $options = []) {
 		$query = http_build_query($args);
 		$client = new HttpClient([
 			'timeout'  => $this->timeout,
 			'handler' => $this->getCachePlugin()
 		]);
 		$url = $this->protocol . "://" . $this->host . $this->path . ($query ? "?{$query}" : "");
-		$response = $client->get($url);
+		$response = $client->get($url, $options);
 		// allow calling method to handle responses
 		return $response;
 	}

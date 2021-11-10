@@ -27,10 +27,11 @@ class CloudflareDnsOverHttps extends AbstractDomainValidator {
 
 			// will throw an Exception
 			$response = $this->doGet([
-				'ct' => 'application/dns-json',
 				'type' => $type,
 				'name' => $this->domain,
-			]);
+			],  ['headers' => [
+                'Accept' => 'application/dns-json'
+            ]]);
 
 			$body = (string)$response->getBody();
 			if(!$body) {
